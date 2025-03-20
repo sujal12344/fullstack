@@ -15,6 +15,8 @@ const __dirname = dirname(__filename);
 
 const spinner = ora();
 
+let globalOptions;
+
 async function promptUser() {
   return inquirer.prompt([
     {
@@ -82,13 +84,13 @@ async function promptUser() {
       type: "confirm",
       name: "useAppRouter",
       message: "Would you like to use a App Router?",
-      default: false,
+      default: true,
     },
     {
       type: "confirm",
       name: "useTurbopack",
       message: "Would you like to use Turbopack?",
-      default: false,
+      default: true,
     },
 
     {
@@ -110,6 +112,16 @@ async function createNextProject(options) {
     useTurbopack,
     importAlias,
   } = options;
+
+  globalOptions = {
+    projectName,
+    language,
+    useTailwind,
+    useSrcDir,
+    useAppRouter,
+    useTurbopack,
+    importAlias,
+  };
 
   spinner.start("Creating Next.js project...");
 
@@ -137,59 +149,113 @@ async function createNextProject(options) {
 }
 
 async function setupClerk(projectPath) {
-  spinner.start("Setting up Clerk...");
-  spinner.start("Installing Clerk...");
-
   try {
-    await execa("npm", ["install", "@clerk/nextjs"], { cwd: projectPath });
+    if (globalOptions.language === "TypeScript") {
+      // First installation
+      spinner.start("Installing Clerk...");
+      await execa("npm", ["install", "@clerk/nextjs"], {
+        cwd: projectPath,
+        shell: true,
+      });
+      spinner.succeed("Clerk installed successfully");
 
-    //     // Create middleware.ts for Clerk
-    //     const middlewareContent = `import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+      // Middleware setup
+      spinner.start("Setting up Clerk middleware...");
+      const middlewareTemplatePath = path.join(
+        __dirname,
+        "clerkTemplates",
+        "middleware.template.ts"
+      );
+      const middlewarePath = path.join(
+        projectPath,
+        globalOptions.useSrcDir ? "src/middleware.ts" : "middleware.ts"
+      );
 
-    // const isPublicRoute = createRouteMatcher(['/sign-in(.*)', '/sign-up(.*)', '/'])
+      const middlewareContent = await fs.readFile(
+        middlewareTemplatePath,
+        "utf-8"
+      );
+      await fs.writeFile(middlewarePath, middlewareContent);
+      spinner.succeed("Clerk middleware created");
 
-    // export default clerkMiddleware(async (auth, request) => {
-    //   if (!isPublicRoute(request)) {
-    //     await auth.protect()
-    //   }
-    // })
+      // Auth folder setup
+      spinner.start("Setting up auth folder...");
+      const authFolderSourcePath = path.join(
+        __dirname,
+        "clerkTemplates",
+        "(auth)"
+      );
+      const authFolderDestPath = path.join(
+        projectPath,
+        globalOptions.useSrcDir
+          ? globalOptions.useAppRouter
+            ? "src/app/(auth)"
+            : "src/pages/(auth)"
+          : globalOptions.useAppRouter
+          ? "app/(auth)"
+          : "pages/(auth)"
+      );
 
-    // export const config = {
-    //   matcher: [
-    //     // Skip Next.js internals and all static files, unless found in search params
-    //     '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    //     // Always run for API routes
-    //     '/(api|trpc)(.*)',
-    //   ],
-    // }`;
+      await fs.copy(authFolderSourcePath, authFolderDestPath);
+      spinner.succeed("Auth folder created");
 
-    //     await fs.writeFile(
-    //       path.join(projectPath, "middleware.ts"),
-    //       middlewareContent
-    //     );
-    const templatePath = path.join(__dirname, "middleware.template.txt");
-    const destinationPath = path.join(projectPath, "middleware.ts");
+      // Environment setup
+      spinner.start("Setting up environment variables...");
+      const envTemplatePath = path.join(
+        __dirname,
+        "clerkTemplates",
+        ".env.template.env"
+      );
+      const envPath = path.join(projectPath, ".env");
 
-    const content = await fs.readFile(templatePath, "utf-8");
-    await fs.writeFile(destinationPath, content);
-    console.log("✅ Clerk middleware created!");
+      const envContent = await fs.readFile(envTemplatePath, "utf-8");
+      await fs.writeFile(envPath, envContent);
+      spinner.succeed(".env file created for Clerk");
 
-    const { useclerkThemes } = await inquirer.prompt([
-      {
-        type: "confirm",
-        name: "useclerkThemes",
-        message: "Would you like to use Clerk themes?",
-        default: false,
-      },
-    ]);
+      // IMPORTANT: Stop spinner completely before showing prompt
+      spinner.stop();
 
-    if (useclerkThemes) {
-      await execa("npm", ["install", "@clerk/themes"], { cwd: projectPath });
+      const { useclerkThemes } = await inquirer.prompt([
+        {
+          type: "confirm",
+          name: "useclerkThemes",
+          message: "Would you like to use Clerk themes?",
+          default: false,
+        },
+      ]);
+
+      if (useclerkThemes) {
+        spinner.start("Installing Clerk themes...");
+        await execa("npm", ["install", "@clerk/themes"], { cwd: projectPath });
+
+        spinner.start("Setting up Clerk themes...");
+        const layoutClerkThemesTemplatePath = path.join(
+          __dirname,
+          "clerkTemplates",
+          "layout.clerkThemes.tsx"
+        );
+        const layoutClerkThemesPath = path.join(
+          projectPath,
+          globalOptions.useSrcDir ? "src/app/layout.tsx" : "app/layout.tsx"
+        );
+
+        const layoutClerkThemesContent = await fs.readFile(
+          layoutClerkThemesTemplatePath,
+          "utf-8"
+        );
+        await fs.writeFile(layoutClerkThemesPath, layoutClerkThemesContent);
+        spinner.succeed("Layout file configured for Clerk themes");
+      }
+
+      console.log(chalk.green("✅ Clerk setup completed successfully"));
+    } else {
+      console.log(
+        chalk.red("Clerk is only supported with TypeScript projects")
+      );
     }
-
-    spinner.succeed("Clerk setup completed");
   } catch (error) {
     spinner.fail("Failed to setup Clerk");
+    console.error(chalk.red("Error:"), error);
     throw error;
   }
 }
