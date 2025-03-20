@@ -1,20 +1,28 @@
 {
   "name": "create-full-stack",
   "version": "1.0.0",
+  "main": "./dist/index.js",
   "description": "CLI tool to generate Next.js projects with various configurations",
   "type": "module",
   "bin": {
-    "create-full-stack": "./index.js"
+    "create-full-stack": "./dist/index.js"
   },
   "scripts": {
-    "start": "node index.js"
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.12.6",
     "chalk": "^5.3.0",
     "execa": "^8.0.1",
     "fs-extra": "^11.2.0",
     "inquirer": "^9.2.12",
     "ora": "^7.0.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.1",
+    "@types/inquirer": "^9.0.3",
+    "@types/node": "^18.15.0",
+    "typescript": "^5.0.4"
   }
 }

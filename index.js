@@ -66,7 +66,7 @@ async function promptUser() {
       type: "confirm",
       name: "initGit",
       message: "Initialize a git repository?",
-      default: false,
+      default: true,
     },
     {
       type: "confirm",
