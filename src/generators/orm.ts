@@ -17,8 +17,6 @@ export async function setupORM(
   database?: "PostgreSQL" | "SQLite" | "MySQL" | "None"
 ): Promise<void> {
   try {
-    const globalOptions = getGlobalOptions();
-
     if (orm === "Prisma") {
       await setupPrisma(projectPath, database);
     } else if (orm === "Drizzle") {
@@ -35,6 +33,7 @@ async function setupPrisma(
   database?: "PostgreSQL" | "SQLite" | "MySQL" | "None"
 ): Promise<void> {
   const spinner = createSpinner("Installing Prisma...");
+  const globalOptions = getGlobalOptions();
 
   try {
     // Install Prisma dependencies
@@ -46,83 +45,85 @@ async function setupPrisma(
 
     // Initialize Prisma
     const initSpinner = createSpinner("Initializing Prisma...");
-    await execa("npx", ["prisma", "init"], { cwd: projectPath });
+    await execa("npx", ["prisma", "init", "--datasource-provider", database!], {
+      cwd: projectPath,
+    });
     initSpinner.succeed("Prisma initialized");
 
     // Configure database in schema.prisma
-    if (database && database !== "None") {
-      const schemaSpinner = createSpinner(
-        `Configuring Prisma for ${database}...`
-      );
-      const schemaPath = path.join(projectPath, "prisma", "schema.prisma");
+    //     if (database && database !== "None") {
+    //       const schemaSpinner = createSpinner(
+    //         `Configuring Prisma for ${database}...`
+    //       );
+    //       const schemaPath = path.join(projectPath, "prisma", "schema.prisma");
 
-      let schemaContent = await fs.readFile(schemaPath, "utf-8");
+    //       let schemaContent = await fs.readFile(schemaPath, "utf-8");
 
-      // Replace the default database provider with the selected one
-      switch (database) {
-        case "PostgreSQL":
-          schemaContent = schemaContent.replace(
-            'provider = "postgresql"',
-            'provider = "postgresql"'
-          );
-          break;
-        case "SQLite":
-          schemaContent = schemaContent.replace(
-            'provider = "postgresql"',
-            'provider = "sqlite"'
-          );
-          schemaContent = schemaContent.replace(
-            'url      = env("DATABASE_URL")',
-            'url      = "file:./dev.db"'
-          );
-          break;
-        case "MySQL":
-          schemaContent = schemaContent.replace(
-            'provider = "postgresql"',
-            'provider = "mysql"'
-          );
-          break;
-      }
+    //       // Replace the default database provider with the selected one
+    //       switch (database) {
+    //         case "PostgreSQL":
+    //           schemaContent = schemaContent.replace(
+    //             'provider = "postgresql"',
+    //             'provider = "postgresql"'
+    //           );
+    //           break;
+    //         case "SQLite":
+    //           schemaContent = schemaContent.replace(
+    //             'provider = "postgresql"',
+    //             'provider = "sqlite"'
+    //           );
+    //           schemaContent = schemaContent.replace(
+    //             'url      = env("DATABASE_URL")',
+    //             'url      = "file:./dev.db"'
+    //           );
+    //           break;
+    //         case "MySQL":
+    //           schemaContent = schemaContent.replace(
+    //             'provider = "postgresql"',
+    //             'provider = "mysql"'
+    //           );
+    //           break;
+    //       }
 
-      // Update the schema file
-      await fs.writeFile(schemaPath, schemaContent);
-      schemaSpinner.succeed(`Prisma configured for ${database}`);
+    //       // Update the schema file
+    //       await fs.writeFile(schemaPath, schemaContent);
+    //       schemaSpinner.succeed(`Prisma configured for ${database}`);
 
-      // Add example model
-      const modelSpinner = createSpinner("Adding example model...");
-      const exampleModel = `\nmodel Example {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}\n`;
+    //       // Add example model
+    //       const modelSpinner = createSpinner("Adding example model...");
+    //       const exampleModel = `\nmodel Example {
+    //   id        String   @id @default(cuid())
+    //   createdAt DateTime @default(now())
+    //   updatedAt DateTime @updatedAt
+    // }\n`;
 
-      await fs.appendFile(schemaPath, exampleModel);
-      modelSpinner.succeed("Example model added to schema");
-    }
+    //       await fs.appendFile(schemaPath, exampleModel);
+    //       modelSpinner.succeed("Example model added to schema");
+    //     }
 
     // Update .env file with proper database URL if not SQLite
-    if (database && database !== "SQLite" && database !== "None") {
-      const envPath = path.join(projectPath, ".env");
-      let envContent = "";
+    // if (database && database !== "SQLite" && database !== "None") {
+    //   const envPath = path.join(projectPath, ".env");
+    //   let envContent = "";
 
-      if (await fs.pathExists(envPath)) {
-        envContent = await fs.readFile(envPath, "utf-8");
-      }
+    //   if (await fs.pathExists(envPath)) {
+    //     envContent = await fs.readFile(envPath, "utf-8");
+    //   }
 
-      if (!envContent.includes("DATABASE_URL")) {
-        const dbUrlSpinner = createSpinner("Setting up database URL...");
-        let databaseUrl = "";
+    //   if (!envContent.includes("DATABASE_URL")) {
+    //     const dbUrlSpinner = createSpinner("Setting up database URL...");
+    //     let databaseUrl = "";
 
-        switch (database) {
-          case "PostgreSQL":
-            databaseUrl =
-              'DATABASE_URL="postgresql://postgres:password@localhost:5432/mydb?schema=public"';
-            break;
-          case "MySQL":
-            databaseUrl =
-              'DATABASE_URL="mysql://root:password@localhost:3306/mydb"';
-            break;
-        }
+    //     switch (database) {
+    //       case "PostgreSQL":
+    //         databaseUrl =
+    //           'DATABASE_URL="postgresql://postgres:password@localhost:5432/mydb?schema=public"';
+    //         break;
+    //       case "MySQL":
+    //         databaseUrl =
+    //           'DATABASE_URL="mysql://root:password@localhost:3306/mydb"';
+    //         break;
+    //     }
 
         await fs.appendFile(envPath, `\n${databaseUrl}\n`);
         dbUrlSpinner.succeed("Database URL added to .env file");
