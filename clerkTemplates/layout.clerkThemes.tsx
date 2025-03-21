@@ -19,8 +19,8 @@ export default function RootLayout({
         baseTheme: [neobrutalism], // or shadesOfPurple, or dark like [dark, neobrutalism, shadesOfPurple]
       }}
     >
-      <html suppressHydrationWarning>
-        <body>
+      <html>
+        <body suppressHydrationWarning>
           <ClerkLoading>
             <div>
               Clerk is loading... Here add your loading spinner or animation
