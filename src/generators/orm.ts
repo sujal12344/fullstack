@@ -125,10 +125,28 @@ async function setupPrisma(
     //         break;
     //     }
 
-        await fs.appendFile(envPath, `\n${databaseUrl}\n`);
-        dbUrlSpinner.succeed("Database URL added to .env file");
-      }
-    }
+    //     await fs.appendFile(envPath, `\n${databaseUrl}\n`);
+    //     dbUrlSpinner.succeed("Database URL added to .env file");
+    //   }
+    // }
+
+    // Init prismadb in lib
+    const prismadbSpinner = createSpinner("Initializing prismadb in lib...");
+
+    const libFolderSourcePath = path.join(rootDir, "clerkTemplates", "lib");
+    const libFolderDestPath = path.join(
+      projectPath,
+      globalOptions.useSrcDir
+        ? globalOptions.useAppRouter
+          ? "src/app/lib"
+          : "src/pages/lib"
+        : globalOptions.useAppRouter
+        ? "app/lib"
+        : "pages/lib"
+    );
+
+    await fs.copy(libFolderSourcePath, libFolderDestPath);
+    prismadbSpinner.succeed("Prisma client initialized");
 
     logger.success("Prisma setup completed successfully");
   } catch (error) {
