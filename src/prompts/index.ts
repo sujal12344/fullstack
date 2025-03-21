@@ -1,86 +1,114 @@
-import inquirer from "inquirer";
+import prompts from "prompts";
 import { ProjectOptions } from "../types/index.js";
 
 export async function promptUser(): Promise<ProjectOptions> {
-  return inquirer.prompt([
+  const response = await prompts([
     {
-      type: "input",
+      type: "text",
       name: "projectName",
       message: "What is your project name?",
+      initial: "my-customised-app",
       validate: (input: string) => {
         if (/^([A-Za-z\-_\d])+$/.test(input)) return true;
         return "Project name may only include letters, numbers, underscores and hashes.";
       },
-      default: "my-customised-app",
     },
     {
-      type: "list",
+      type: "select",
       name: "language",
       message: "Which language would you like to use?",
-      choices: ["TypeScript", "JavaScript"],
-      default: "TypeScript",
+      choices: [
+        { title: "TypeScript", value: "TypeScript" },
+        { title: "JavaScript", value: "JavaScript" },
+      ],
+      initial: 0,
     },
     {
-      type: "confirm",
+      type: "toggle",
       name: "useTailwind",
       message: "Would you like to use Tailwind CSS?",
-      default: true,
+      initial: true,
+      active: "Yes",
+      inactive: "No",
     },
     {
-      type: "confirm",
+      type: "toggle",
       name: "useClerk",
       message: "Would you like to use Clerk for authentication?",
-      default: true,
+      initial: true,
+      active: "Yes",
+      inactive: "No",
     },
     {
-      type: "list",
+      type: "select",
       name: "orm",
       message: "Which ORM would you like to use?",
-      choices: ["None", "Prisma", "Drizzle"],
-      default: "None",
+      choices: [
+        { title: "None", value: "None" },
+        { title: "Prisma", value: "Prisma" },
+        { title: "Drizzle", value: "Drizzle" },
+      ],
+      initial: 0,
     },
     {
-      type: "list",
+      type: (prev: string) => (prev !== "None" ? "select" : null),
       name: "database",
       message: "Which database would you like to use?",
-      choices: ["None", "PostgreSQL", "SQLite", "MySQL"],
-      when: (answers) => answers.orm !== "None",
+      choices: [
+        { title: "None", value: "None" },
+        { title: "PostgreSQL", value: "PostgreSQL" },
+        { title: "SQLite", value: "SQLite" },
+        { title: "MySQL", value: "MySQL" },
+      ],
+      initial: 0,
     },
     {
-      type: "confirm",
+      type: "toggle",
       name: "initGit",
       message: "Initialize a git repository?",
-      default: true,
+      initial: true,
+      active: "Yes",
+      inactive: "No",
     },
     {
-      type: "confirm",
+      type: "toggle",
       name: "installDeps",
       message: "Install dependencies?",
-      default: true,
+      initial: true,
+      active: "Yes",
+      inactive: "No",
     },
     {
-      type: "confirm",
+      type: "toggle",
       name: "useSrcDir",
       message: "Would you like to use a src directory?",
-      default: false,
+      initial: false,
+      active: "Yes",
+      inactive: "No",
     },
     {
-      type: "confirm",
+      type: "toggle",
       name: "useAppRouter",
       message: "Would you like to use App Router?",
-      default: true,
+      initial: true,
+      active: "Yes",
+      inactive: "No",
     },
     {
-      type: "confirm",
+      type: "toggle",
       name: "useTurbopack",
       message: "Would you like to use Turbopack?",
-      default: true,
+      initial: true,
+      active: "Yes",
+      inactive: "No",
     },
     {
-      type: "input",
+      type: "text",
       name: "importAlias",
       message: "Enter import alias (or leave empty to skip):",
-      default: "@",
+      initial: "@",
     },
   ]);
+
+  return response as ProjectOptions;
 }
