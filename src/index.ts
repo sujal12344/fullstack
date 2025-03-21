@@ -9,13 +9,14 @@ import { initializeGit } from "./generators/git.js";
 import { logger } from "./utils/logger.js";
 import { createSpinner } from "./utils/spinner.js";
 import { execa } from "execa";
+import { ProjectOptions } from "./types/index.js";
 
 async function main() {
   logger.title("Welcome to the Next.js Project Generator!\n");
 
   try {
     // Get user options
-    const options = await promptUser();
+    const options: ProjectOptions = await promptUser();
     const projectPath = path.join(process.cwd(), options.projectName);
 
     // Create Next.js project

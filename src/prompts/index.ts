@@ -56,7 +56,7 @@ export async function promptUser(): Promise<ProjectOptions> {
       type: "confirm",
       name: "installDeps",
       message: "Install dependencies?",
-      default: false,
+      default: true,
     },
     {
       type: "confirm",

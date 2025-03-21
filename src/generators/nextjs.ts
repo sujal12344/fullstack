@@ -36,7 +36,7 @@ export async function createNextProject(
     projectName,
     "--use-npm",
     "--eslint",
-    language === "TypeScript" ? "--typescript" : "--js",
+    language === "TypeScript" ? "--ts" : "--js",
     useTailwind ? "--tailwind" : "--no-tailwind",
     useAppRouter ? "--app" : "--no-app",
     useSrcDir ? "--src-dir" : "--no-src-dir",
