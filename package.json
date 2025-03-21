@@ -1,16 +1,17 @@
 {
-  "name": "create-full-stack",
+  "name": "create-quickstart-app",
   "version": "1.0.0",
   "main": "./dist/index.js",
   "description": "CLI tool to generate Next.js projects with various configurations",
   "type": "module",
   "bin": {
-    "create-full-stack": "./dist/index.js"
+    "create-quickstart-app": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "chalk": "^5.3.0",
@@ -24,5 +25,23 @@
     "@types/inquirer": "^9.0.3",
     "@types/node": "^18.15.0",
     "typescript": "^5.0.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sujal12344/fullstack.git"
+  },
+  "keywords": [
+    "AIO",
+    "Terminal",
+    "Command Line Interface",
+    "CLI"
+  ],
+  "author": "Sujal",
+  "files": [
+    "dist/",
+    "clerkTemplates/"
+  ],
+  "engines": {
+    "node": ">=16.0.0"
   }
 }
