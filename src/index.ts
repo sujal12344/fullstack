@@ -10,6 +10,7 @@ import { logger } from "./utils/logger.js";
 import { createSpinner } from "./utils/spinner.js";
 import { execa } from "execa";
 import { ProjectOptions } from "./types/index.js";
+import { setupTemplates } from "./generators/templates.js";
 
 async function main() {
   logger.title("Welcome to the Next.js Project Generator!\n");
@@ -30,6 +31,11 @@ async function main() {
     // Setup ORM if selected
     if (options.orm !== "None") {
       await setupORM(projectPath, options.orm, options.database);
+    }
+
+    // Would you like use any prebuilt templates?
+    if (options.useTemplates) {
+      await setupTemplates(projectPath, options.templates);
     }
 
     // Initialize git if selected

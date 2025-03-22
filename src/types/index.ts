@@ -11,6 +11,8 @@ export interface ProjectOptions {
   useAppRouter: boolean;
   useTurbopack: boolean;
   importAlias?: string;
+  useTemplates: boolean;
+  templates?: "ecommerce" | "blog" | "portfolio" | "dashboard" | "game";
 }
 
 export interface GlobalOptions {
@@ -26,4 +28,6 @@ export interface GlobalOptions {
   useAppRouter: boolean;
   useTurbopack: boolean;
   importAlias?: string;
+  useTemplates: boolean;
+  templates?: "ecommerce" | "blog" | "portfolio" | "dashboard" | "game";
 }

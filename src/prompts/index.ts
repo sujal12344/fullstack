@@ -40,7 +40,7 @@ export async function promptUser(): Promise<ProjectOptions> {
       inactive: "No",
     },
     {
-      type: (prev: string) => (prev !== "None" ? "select" : null),
+      type: "select",
       name: "database",
       message: "Which database would you like to use?",
       choices: [
@@ -52,7 +52,7 @@ export async function promptUser(): Promise<ProjectOptions> {
       initial: 0,
     },
     {
-      type: "select",
+      type: (prev: string) => (prev !== "None" ? "select" : null),
       name: "orm",
       message: "Which ORM would you like to use?",
       choices: [
@@ -86,12 +86,28 @@ export async function promptUser(): Promise<ProjectOptions> {
       active: "Yes",
       inactive: "No",
     },
-    // {
-    //   type: "text",
-    //   name: "importAlias",
-    //   message: "Would you like to customize the import alias (`@/*` by default)?",
-    //   initial: "@",
-    // },
+    {
+      type: "toggle",
+      name: "useTemplates",
+      message: "Would you like to use a prebuilt template?",
+      initial: false,
+      active: "Yes",
+      inactive: "No",
+    },
+    {
+      type: (prev) => (prev ? "select" : null),
+      name: "templates",
+      message: "Select templates to include:",
+      choices: [
+        { title: "E-commerce Store", value: "ecommerce" },
+        { title: "Self Blog Application", value: "blog" },
+        { title: "Portfolio", value: "portfolio" },
+        { title: "Dashboard", value: "dashboard" },
+        { title: "Game Interface", value: "game" },
+      ],
+      initial: 0,
+      hint: "Space to select, Return to submit",
+    },
     {
       type: "toggle",
       name: "initGit",

@@ -22,6 +22,8 @@ export async function createNextProject(
     useAppRouter,
     useTurbopack,
     importAlias,
+    useTemplates,
+    templates,
   } = options;
 
   globalOptions = {
@@ -37,6 +39,8 @@ export async function createNextProject(
     useAppRouter,
     useTurbopack,
     importAlias,
+    useTemplates,
+    templates,
   };
 
   const spinner = createSpinner("Creating Next.js project...");
