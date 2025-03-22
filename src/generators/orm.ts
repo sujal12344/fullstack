@@ -138,11 +138,11 @@ async function setupPrisma(
       projectPath,
       globalOptions.useSrcDir
         ? globalOptions.useAppRouter
-          ? "src/app/lib"
-          : "src/pages/lib"
+          ? "src/lib"
+          : "src/lib"
         : globalOptions.useAppRouter
-        ? "app/lib"
-        : "pages/lib"
+        ? "lib"
+        : "lib"
     );
 
     await fs.copy(libFolderSourcePath, libFolderDestPath);
