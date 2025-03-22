@@ -7,6 +7,7 @@ import { dirname } from "path";
 import { createSpinner } from "../utils/spinner.js";
 import { logger } from "../utils/logger.js";
 import { getGlobalOptions } from "./nextjs.js";
+import prompts from "prompts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -80,12 +81,14 @@ export async function setupClerk(projectPath: string): Promise<void> {
       envSpinner.succeed(".env file created for Clerk");
 
       // Ask about Clerk themes
-      const { useclerkThemes } = await inquirer.prompt([
+      const { useclerkThemes } = await prompts([
         {
-          type: "confirm",
+          type: "toggle",
           name: "useclerkThemes",
           message: "Would you like to use Clerk themes?",
-          default: false,
+          initial: true,
+          active: "Yes",
+          inactive: "No",
         },
       ]);
 
