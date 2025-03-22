@@ -1,7 +1,6 @@
 import { type Metadata } from "next";
-import { ClerkLoading, ClerkProvider, ClerkLoaded } from "@clerk/nextjs";
 import "./globals.css";
-import { dark, neobrutalism, shadesOfPurple } from "@clerk/themes";
+import ClerkProviderLayout from "../lib/ClerkProviderLayout";
 
 export const metadata: Metadata = {
   title: "Clerk Next.js Quickstart",
@@ -14,21 +13,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider
-      appearance={{
-        baseTheme: [neobrutalism], // or shadesOfPurple, or dark like [dark, neobrutalism, shadesOfPurple]
-      }}
-    >
-      <html>
-        <body suppressHydrationWarning>
-          <ClerkLoading>
-            <div>
-              Clerk is loading... Here add your loading spinner or animation
-            </div>
-          </ClerkLoading>
-          <ClerkLoaded>{children}</ClerkLoaded>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html suppressHydrationWarning>
+      <body suppressHydrationWarning>
+        <ClerkProviderLayout>{children}</ClerkProviderLayout>
+      </body>
+    </html>
   );
 }
