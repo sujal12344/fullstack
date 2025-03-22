@@ -13,6 +13,11 @@ export async function createNextProject(
     projectName,
     language,
     useTailwind,
+    useClerk,
+    orm,
+    database,
+    initGit,
+    installDeps,
     useSrcDir,
     useAppRouter,
     useTurbopack,
@@ -23,6 +28,11 @@ export async function createNextProject(
     projectName,
     language,
     useTailwind,
+    useClerk,
+    orm,
+    database,
+    initGit,
+    installDeps,
     useSrcDir,
     useAppRouter,
     useTurbopack,
@@ -46,7 +56,7 @@ export async function createNextProject(
   ];
 
   try {
-    logger.info("\nRunning command: " + `npx ${args.join(" ")}`);
+    // logger.info("\nRunning command: " + `npx ${args.join(" ")}`);
     execSync(`npx ${args.join(" ")}`, { stdio: "inherit" });
     spinner.succeed("Next.js project created successfully");
     return projectName;
