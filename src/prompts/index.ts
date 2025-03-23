@@ -1,7 +1,7 @@
 import prompts from "prompts";
-import { ProjectOptions } from "../types/index.js";
+import { GlobalOptions } from "../types/index.js";
 
-export async function promptUser(): Promise<ProjectOptions> {
+export async function promptUser(): Promise<GlobalOptions> {
   const response = await prompts([
     {
       type: "text",
@@ -48,6 +48,7 @@ export async function promptUser(): Promise<ProjectOptions> {
         { title: "PostgreSQL", value: "PostgreSQL" },
         { title: "SQLite", value: "SQLite" },
         { title: "MySQL", value: "MySQL" },
+        { title: "MongoDB", value: "MongoDB" },
       ],
       initial: 0,
     },
@@ -59,6 +60,7 @@ export async function promptUser(): Promise<ProjectOptions> {
         { title: "None", value: "None" },
         { title: "Prisma", value: "Prisma" },
         { title: "Drizzle", value: "Drizzle" },
+        { title: "Mongoose", value: "Mongoose" },
       ],
       initial: 0,
     },
@@ -102,8 +104,7 @@ export async function promptUser(): Promise<ProjectOptions> {
         { title: "E-commerce Store", value: "ecommerce" },
         { title: "Self Blog Application", value: "blog" },
         { title: "Portfolio", value: "portfolio" },
-        { title: "Dashboard", value: "dashboard" },
-        { title: "Game Interface", value: "game" },
+        { title: "Landing Page", value: "landingPage" },
       ],
       initial: 0,
       hint: "Space to select, Return to submit",
@@ -126,5 +127,5 @@ export async function promptUser(): Promise<ProjectOptions> {
     },
   ]);
 
-  return response as ProjectOptions;
+  return response as GlobalOptions;
 }

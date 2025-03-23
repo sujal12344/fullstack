@@ -6,6 +6,7 @@ import { dirname } from "path";
 import { createSpinner } from "../utils/spinner.js";
 import { logger } from "../utils/logger.js";
 import { getGlobalOptions } from "./nextjs.js";
+import { GlobalOptions } from "../types/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,14 +14,16 @@ const rootDir = path.join(__dirname, "..", "..");
 
 export async function setupORM(
   projectPath: string,
-  orm: "Prisma" | "Drizzle",
-  database?: "PostgreSQL" | "SQLite" | "MySQL" | "None"
+  orm: GlobalOptions["orm"],
+  database?: GlobalOptions["database"]
 ): Promise<void> {
   try {
     if (orm === "Prisma") {
       await setupPrisma(projectPath, database);
-    } else if (orm === "Drizzle") {
+    } else if (orm === "Drizzle" && database !== "MongoDB") {
       await setupDrizzle(projectPath, database);
+    } else if (orm === "Mongoose" && database === "MongoDB") {
+      await setupMongoose(projectPath);
     }
   } catch (error) {
     logger.error("Failed to setup ORM", error);
@@ -30,7 +33,7 @@ export async function setupORM(
 
 async function setupPrisma(
   projectPath: string,
-  database?: "PostgreSQL" | "SQLite" | "MySQL" | "None"
+  database?: GlobalOptions["database"]
 ): Promise<void> {
   const spinner = createSpinner("Installing Prisma...");
   const globalOptions = getGlobalOptions();
@@ -348,6 +351,233 @@ export default {
     logger.success("Drizzle setup completed successfully");
   } catch (error) {
     spinner.fail("Failed to setup Drizzle");
+    throw error;
+  }
+}
+
+async function setupMongoose(projectPath: string): Promise<void> {
+  const spinner = createSpinner("Installing Mongoose...");
+  const globalOptions = getGlobalOptions();
+
+  try {
+    // Install Mongoose
+    await execa("npm", ["install", "mongoose"], { cwd: projectPath });
+    spinner.succeed("Mongoose installed successfully");
+
+    // Create lib directory if it doesn't exist
+    const libDirPath = path.join(
+      projectPath,
+      globalOptions.useSrcDir ? "src/lib" : "lib"
+    );
+    await fs.ensureDir(libDirPath);
+
+    // Create mongoose connection file
+    const dbConfigSpinner = createSpinner("Creating Mongoose configuration...");
+
+    const mongooseConnectContent = `import mongoose from 'mongoose';
+
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/myapp';
+
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+async function dbConnect() {
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false,
+    };
+
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+      return mongoose;
+    });
+  }
+
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    throw e;
+  }
+
+  return cached.conn;
+}
+
+export default dbConnect;
+`;
+
+    await fs.writeFile(
+      path.join(libDirPath, "mongoose.ts"),
+      mongooseConnectContent
+    );
+    dbConfigSpinner.succeed("Mongoose configuration created");
+
+    // Create models directory and example model
+    const modelsSpinner = createSpinner("Creating example model...");
+    const modelsDirPath = path.join(
+      projectPath,
+      globalOptions.useSrcDir ? "src/models" : "models"
+    );
+    await fs.ensureDir(modelsDirPath);
+
+    const exampleModelContent = `import mongoose from 'mongoose';
+
+const ExampleSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'Please provide a name'],
+    maxlength: [60, 'Name cannot be more than 60 characters'],
+  },
+  description: {
+    type: String,
+    required: false,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+export default mongoose.models.Example || mongoose.model('Example', ExampleSchema);
+`;
+
+    await fs.writeFile(
+      path.join(modelsDirPath, "Example.ts"),
+      exampleModelContent
+    );
+    modelsSpinner.succeed("Example model created");
+
+    // Create environment file with MongoDB URI if it doesn't exist
+    const envPath = path.join(projectPath, ".env");
+    let envContent = "";
+
+    if (await fs.pathExists(envPath)) {
+      envContent = await fs.readFile(envPath, "utf-8");
+    }
+
+    if (!envContent.includes("MONGODB_URI")) {
+      const envSpinner = createSpinner("Setting up MongoDB URI...");
+      const mongoDbUrl = 'MONGODB_URI="mongodb://localhost:27017/myapp"';
+      await fs.appendFile(envPath, `\n${mongoDbUrl}\n`);
+      envSpinner.succeed("MongoDB URI added to .env file");
+    }
+
+    // Create an API example to use the model
+    if (globalOptions.useAppRouter) {
+      const apiSpinner = createSpinner("Creating example API route...");
+      const apiDirPath = path.join(
+        projectPath,
+        globalOptions.useSrcDir
+          ? "src/app/api/examples/route.ts"
+          : "app/api/examples/route.ts"
+      );
+
+      await fs.ensureDir(path.dirname(apiDirPath));
+
+      const apiRouteContent = `import { NextResponse } from 'next/server';
+import dbConnect from '${
+        globalOptions.useSrcDir
+          ? "../../../lib/mongoose"
+          : "../../../lib/mongoose"
+      }';
+import Example from '${
+        globalOptions.useSrcDir
+          ? "../../../models/Example"
+          : "../../../models/Example"
+      }';
+
+export async function GET() {
+  try {
+    await dbConnect();
+    const examples = await Example.find({});
+    return NextResponse.json(examples);
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to fetch examples' }, { status: 500 });
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    await dbConnect();
+    
+    const example = await Example.create(body);
+    return NextResponse.json(example, { status: 201 });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to create example' }, { status: 500 });
+  }
+}
+`;
+
+      await fs.writeFile(apiDirPath, apiRouteContent);
+      apiSpinner.succeed("Example API route created");
+    } else {
+      // For pages directory
+      const apiSpinner = createSpinner("Creating example API route...");
+      const apiDirPath = path.join(
+        projectPath,
+        globalOptions.useSrcDir
+          ? "src/pages/api/examples.ts"
+          : "pages/api/examples.ts"
+      );
+
+      await fs.ensureDir(path.dirname(apiDirPath));
+
+      const apiRouteContent = `import type { NextApiRequest, NextApiResponse } from 'next';
+import dbConnect from '${
+        globalOptions.useSrcDir ? "../../lib/mongoose" : "../../lib/mongoose"
+      }';
+import Example from '${
+        globalOptions.useSrcDir
+          ? "../../models/Example"
+          : "../../models/Example"
+      }';
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { method } = req;
+
+  await dbConnect();
+
+  switch (method) {
+    case 'GET':
+      try {
+        const examples = await Example.find({});
+        res.status(200).json(examples);
+      } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch examples' });
+      }
+      break;
+    case 'POST':
+      try {
+        const example = await Example.create(req.body);
+        res.status(201).json(example);
+      } catch (error) {
+        res.status(500).json({ error: 'Failed to create example' });
+      }
+      break;
+    default:
+      res.status(405).json({ error: 'Method not allowed' });
+  }
+}
+`;
+
+      await fs.writeFile(apiDirPath, apiRouteContent);
+      apiSpinner.succeed("Example API route created");
+    }
+
+    logger.success("Mongoose setup completed successfully");
+  } catch (error) {
+    spinner.fail("Failed to setup Mongoose");
     throw error;
   }
 }
