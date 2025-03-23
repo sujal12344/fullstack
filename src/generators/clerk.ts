@@ -129,6 +129,11 @@ export async function setupClerk(projectPath: string): Promise<void> {
           globalOptions.useSrcDir ? "src/app" : "app",
           "ClerkProviderLayout.tsx"
         );
+        const clerkProviderLayoutThemePath = path.join(
+          projectPath,
+          globalOptions.useSrcDir ? "src/app" : "app",
+          "ClerkProviderThemeLayout.tsx"
+        );
         const clerkProviderLayoutData = await fs.readFile(
           clerkProviderLayoutPath,
           "utf-8"
@@ -141,6 +146,7 @@ export async function setupClerk(projectPath: string): Promise<void> {
           clerkProviderLayoutPath,
           clerkProviderLayoutDataUpdated
         );
+        await fs.rename(clerkProviderLayoutPath, clerkProviderLayoutThemePath);
 
         layoutSpinner.succeed("Layout file configured for Clerk themes");
       }

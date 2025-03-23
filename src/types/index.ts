@@ -12,7 +12,7 @@ export interface ProjectOptions {
   useTurbopack: boolean;
   importAlias?: string;
   useTemplates: boolean;
-  templates?: "ecommerce" | "blog" | "portfolio" | "dashboard" | "game";
+  templates?: "ecommerce" | "blog" | "portfolio" | "landingPage";
 }
 
 export interface GlobalOptions {
@@ -29,5 +29,5 @@ export interface GlobalOptions {
   useTurbopack: boolean;
   importAlias?: string;
   useTemplates: boolean;
-  templates?: "ecommerce" | "blog" | "portfolio" | "dashboard" | "game";
+  templates?: "ecommerce" | "blog" | "portfolio" | "landingPage";
 }
