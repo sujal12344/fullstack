@@ -21,6 +21,7 @@ export async function setupClerk(projectPath: string): Promise<void> {
     if (globalOptions.language === "TypeScript") {
       // First installation
       const spinner = createSpinner("Installing Clerk...");
+
       await execa("npm", ["install", "@clerk/nextjs"], {
         cwd: projectPath,
         shell: true,
@@ -31,28 +32,20 @@ export async function setupClerk(projectPath: string): Promise<void> {
       const middlewareSpinner = createSpinner("Setting up Clerk middleware...");
       const middlewareTemplatePath = path.join(
         rootDir,
-        "clerkTemplates",
-        "middleware.template.ts"
+        "clerk",
+        "middleware.ts"
       );
       const middlewarePath = path.join(
         projectPath,
         globalOptions.useSrcDir ? "src/middleware.ts" : "middleware.ts"
       );
 
-      const middlewareContent = await fs.readFile(
-        middlewareTemplatePath,
-        "utf-8"
-      );
-      await fs.writeFile(middlewarePath, middlewareContent);
+      await fs.copyFile(middlewareTemplatePath, middlewarePath);
       middlewareSpinner.succeed("Clerk middleware created");
 
       // Auth folder setup
       const authSpinner = createSpinner("Setting up auth folder...");
-      const authFolderSourcePath = path.join(
-        rootDir,
-        "clerkTemplates",
-        "(auth)"
-      );
+      const authFolderSourcePath = path.join(rootDir, "clerk", "(auth)");
       const authFolderDestPath = path.join(
         projectPath,
         globalOptions.useSrcDir
@@ -69,16 +62,34 @@ export async function setupClerk(projectPath: string): Promise<void> {
 
       // Environment setup
       const envSpinner = createSpinner("Setting up environment variables...");
-      const envTemplatePath = path.join(
-        rootDir,
-        "clerkTemplates",
-        ".env.template.env"
-      );
+      const envTemplatePath = path.join(rootDir, "clerk", ".env");
       const envPath = path.join(projectPath, ".env");
 
-      const envContent = await fs.readFile(envTemplatePath, "utf-8");
-      await fs.writeFile(envPath, envContent);
+      await fs.copyFile(envTemplatePath, envPath);
       envSpinner.succeed(".env file created for Clerk");
+
+      // ClerkProviderLayout setup
+      const clerkProviderLayoutSpinner = createSpinner(
+        "Setting up ClerkProviderLayout page..."
+      );
+      const clerkProviderLayoutTemplatePath = path.join(
+        rootDir,
+        "clerk",
+        "ClerkProviderLayout.tsx"
+      );
+      const clerkProviderLayoutPath = path.join(
+        projectPath,
+        globalOptions.useSrcDir ? "src/app" : "app",
+        "ClerkProviderLayout.tsx"
+      );
+
+      await fs.copyFile(
+        clerkProviderLayoutTemplatePath,
+        clerkProviderLayoutPath
+      );
+      clerkProviderLayoutSpinner.succeed(
+        "ClerkProviderLayout file created for Clerk"
+      );
 
       // Ask about Clerk themes
       const { useclerkThemes } = await prompts([
@@ -94,25 +105,43 @@ export async function setupClerk(projectPath: string): Promise<void> {
 
       if (useclerkThemes) {
         const themesSpinner = createSpinner("Installing Clerk themes...");
+
         await execa("npm", ["install", "@clerk/themes"], { cwd: projectPath });
         themesSpinner.succeed("Clerk themes installed");
 
         const layoutSpinner = createSpinner("Setting up Clerk themes...");
         const layoutClerkThemesTemplatePath = path.join(
           rootDir,
-          "clerkTemplates",
+          "clerk",
           "layout.clerkThemes.tsx"
         );
         const layoutClerkThemesPath = path.join(
           projectPath,
-          globalOptions.useSrcDir ? "src/app/layout.tsx" : "app/layout.tsx"
+          globalOptions.useSrcDir ? "src/app" : "app",
+          "layout.tsx"
         );
 
-        const layoutClerkThemesContent = await fs.readFile(
-          layoutClerkThemesTemplatePath,
+        await fs.copyFile(layoutClerkThemesTemplatePath, layoutClerkThemesPath);
+
+        //change ClerkProviderLayout file to ClerkProviderThemeLayout
+        const clerkProviderLayoutPath = path.join(
+          projectPath,
+          globalOptions.useSrcDir ? "src/app" : "app",
+          "ClerkProviderLayout.tsx"
+        );
+        const clerkProviderLayoutData = await fs.readFile(
+          clerkProviderLayoutPath,
           "utf-8"
         );
-        await fs.writeFile(layoutClerkThemesPath, layoutClerkThemesContent);
+        const clerkProviderLayoutDataUpdated = clerkProviderLayoutData.replace(
+          "ClerkProviderLayout",
+          "ClerkProviderThemeLayout"
+        );
+        await fs.writeFile(
+          clerkProviderLayoutPath,
+          clerkProviderLayoutDataUpdated
+        );
+
         layoutSpinner.succeed("Layout file configured for Clerk themes");
       }
 

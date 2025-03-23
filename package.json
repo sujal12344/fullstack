@@ -39,10 +39,6 @@
     "CLI"
   ],
   "author": "Sujal",
-  "files": [
-    "dist/",
-    "clerkTemplates/"
-  ],
   "engines": {
     "node": ">=16.0.0"
   }
