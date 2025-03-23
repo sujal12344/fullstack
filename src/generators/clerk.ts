@@ -123,30 +123,23 @@ export async function setupClerk(projectPath: string): Promise<void> {
 
         await fs.copyFile(layoutClerkThemesTemplatePath, layoutClerkThemesPath);
 
-        //change ClerkProviderLayout file to ClerkProviderThemeLayout
-        const clerkProviderLayoutPath = path.join(
-          projectPath,
-          globalOptions.useSrcDir ? "src/app" : "app",
-          "ClerkProviderLayout.tsx"
+        //delete ClerkProviderLayout file and create ClerkProviderThemeLayout file
+        await fs.unlink(clerkProviderLayoutPath);
+        const clerkProviderThemeLayoutTemplatePath = path.join(
+          rootDir,
+          "clerk",
+          "ClerkProviderThemeLayout.tsx"
         );
-        const clerkProviderLayoutThemePath = path.join(
+        const clerkProviderThemeLayoutPath = path.join(
           projectPath,
           globalOptions.useSrcDir ? "src/app" : "app",
           "ClerkProviderThemeLayout.tsx"
         );
-        const clerkProviderLayoutData = await fs.readFile(
-          clerkProviderLayoutPath,
-          "utf-8"
+
+        await fs.copyFile(
+          clerkProviderThemeLayoutTemplatePath,
+          clerkProviderThemeLayoutPath
         );
-        const clerkProviderLayoutDataUpdated = clerkProviderLayoutData.replace(
-          "ClerkProviderLayout",
-          "ClerkProviderThemeLayout"
-        );
-        await fs.writeFile(
-          clerkProviderLayoutPath,
-          clerkProviderLayoutDataUpdated
-        );
-        await fs.rename(clerkProviderLayoutPath, clerkProviderLayoutThemePath);
 
         layoutSpinner.succeed("Layout file configured for Clerk themes");
       }

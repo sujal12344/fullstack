@@ -136,7 +136,7 @@ async function setupPrisma(
     // Init prismadb in lib
     const prismadbSpinner = createSpinner("Initializing prismadb in lib...");
 
-    const libFolderSourcePath = path.join(rootDir, "clerkTemplates", "lib");
+    const libFolderSourcePath = path.join(rootDir, "lib");
     const libFolderDestPath = path.join(
       projectPath,
       globalOptions.useSrcDir

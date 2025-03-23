@@ -50,6 +50,11 @@ async function main() {
       spinner.succeed("Dependencies installed");
     }
 
+    // //go to the project directory and run the project using npm run dev
+    // const spinner = createSpinner("Running the project...");
+    // await execa("npm", ["run", "dev"], { cwd: projectPath });
+    // spinner.succeed("Project is running");
+
     // Show next steps
     logger.nextSteps(options.projectName);
   } catch (error) {

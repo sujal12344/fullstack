@@ -31,6 +31,15 @@ export async function promptUser(): Promise<GlobalOptions> {
       active: "Yes",
       inactive: "No",
     },
+    // for shadCN
+    // {
+    //   type: "toggle",
+    //   name: "useShadcn",
+    //   message: "Would you like to use Shadcn for component library?",
+    //   initial: true,
+    //   active: "Yes",
+    //   inactive: "No",
+    // },
     {
       type: "toggle",
       name: "useClerk",
