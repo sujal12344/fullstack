@@ -9,7 +9,7 @@ import { initializeGit } from "./generators/git.js";
 import { logger } from "./utils/logger.js";
 import { createSpinner } from "./utils/spinner.js";
 import { execa } from "execa";
-import { ProjectOptions } from "./types/index.js";
+import { GlobalOptions } from "./types/index.js";
 import { setupTemplates } from "./generators/templates.js";
 
 async function main() {
@@ -17,7 +17,7 @@ async function main() {
 
   try {
     // Get user options
-    const options: ProjectOptions = await promptUser();
+    const options: GlobalOptions = await promptUser();
     const projectPath = path.join(process.cwd(), options.projectName);
 
     // Create Next.js project
@@ -49,6 +49,11 @@ async function main() {
       await execa("npm", ["install"], { cwd: projectPath });
       spinner.succeed("Dependencies installed");
     }
+
+    // //go to the project directory and run the project using npm run dev
+    // const spinner = createSpinner("Running the project...");
+    // await execa("npm", ["run", "dev"], { cwd: projectPath });
+    // spinner.succeed("Project is running");
 
     // Show next steps
     logger.nextSteps(options.projectName);

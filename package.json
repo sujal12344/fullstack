@@ -1,6 +1,6 @@
 {
   "name": "create-quickstart-app",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "main": "./dist/index.js",
   "description": "CLI tool to generate Next.js projects with various configurations",
   "type": "module",
@@ -39,10 +39,6 @@
     "CLI"
   ],
   "author": "Sujal",
-  "files": [
-    "dist/",
-    "clerkTemplates/"
-  ],
   "engines": {
     "node": ">=16.0.0"
   }

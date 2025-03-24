@@ -1,13 +1,13 @@
 import { execa } from "execa";
 import { execSync } from "child_process";
-import { ProjectOptions, GlobalOptions } from "../types/index.js";
+import { GlobalOptions } from "../types/index.js";
 import { createSpinner } from "../utils/spinner.js";
 import { logger } from "../utils/logger.js";
 
 let globalOptions: GlobalOptions;
 
 export async function createNextProject(
-  options: ProjectOptions
+  options: GlobalOptions
 ): Promise<string> {
   const {
     projectName,

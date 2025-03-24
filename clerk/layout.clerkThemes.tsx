@@ -1,6 +1,6 @@
 import { type Metadata } from "next";
 import "./globals.css";
-import ClerkProviderLayout from "../lib/ClerkProviderLayout";
+import ClerkProviderLayout from "./ClerkProviderThemeLayout";
 
 export const metadata: Metadata = {
   title: "Clerk Next.js Quickstart",

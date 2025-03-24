@@ -5,7 +5,7 @@ import { dirname } from "path";
 import { createSpinner } from "../utils/spinner.js";
 import { logger } from "../utils/logger.js";
 import { getGlobalOptions } from "./nextjs.js";
-import { ProjectOptions } from "../types/index.js";
+import { GlobalOptions } from "../types/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,7 +13,7 @@ const rootDir = path.join(__dirname, "..", "..");
 
 export async function setupTemplates(
   projectPath: string,
-  template: ProjectOptions["templates"]
+  template: GlobalOptions["templates"]
 ): Promise<void> {
   const globalOptions = getGlobalOptions();
   const spinner = createSpinner("Setting up templates...");
@@ -34,7 +34,8 @@ export async function setupTemplates(
           : "src/pages"
         : globalOptions.useAppRouter
         ? "app"
-        : "pages"
+        : "pages",
+      "template"
     );
     // Copy template contents to project
     await fs.copy(templatePath, appDir);
