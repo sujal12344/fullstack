@@ -467,14 +467,14 @@ export default function CustomizePage() {
                           borderRadius: theme.borderRadius,
                           marginBottom: theme.spacing.small,
                         }}
-                      ></div>
+                      />
                       <div
                         className="w-full h-16 bg-purple-500"
                         style={{
                           borderRadius: theme.borderRadius,
                           marginBottom: theme.spacing.medium,
                         }}
-                      ></div>
+                      />
                       <div
                         className="flex w-full"
                         style={{ gap: theme.spacing.small }}
@@ -482,11 +482,11 @@ export default function CustomizePage() {
                         <div
                           className="h-16 bg-green-500 flex-1"
                           style={{ borderRadius: theme.borderRadius }}
-                        ></div>
+                        />
                         <div
                           className="h-16 bg-yellow-500 flex-1"
                           style={{ borderRadius: theme.borderRadius }}
-                        ></div>
+                        />
                       </div>
                     </div>
                     <div
@@ -631,7 +631,7 @@ export default function CustomizePage() {
                         onMouseEnter={(e) => {
                           e.currentTarget.style.transform = "translateX(100%)";
                         }}
-                      ></div>
+                      />
                       <p>Hover Me</p>
                       <p className="text-sm opacity-80">Shine Effect</p>
                     </div>

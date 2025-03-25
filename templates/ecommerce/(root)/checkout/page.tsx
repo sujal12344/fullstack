@@ -92,6 +92,7 @@ export default function CheckoutPage() {
                 <div>
                   <label className="block mb-1">First Name</label>
                   <input
+                    title="First Name"
                     type="text"
                     name="firstName"
                     value={formState.firstName}
@@ -103,6 +104,7 @@ export default function CheckoutPage() {
                 <div>
                   <label className="block mb-1">Last Name</label>
                   <input
+                    title="Last Name"
                     type="text"
                     name="lastName"
                     value={formState.lastName}
@@ -114,6 +116,7 @@ export default function CheckoutPage() {
                 <div className="md:col-span-2">
                   <label className="block mb-1">Email</label>
                   <input
+                    title="Email"
                     type="email"
                     name="email"
                     value={formState.email}
@@ -132,6 +135,7 @@ export default function CheckoutPage() {
                 <div>
                   <label className="block mb-1">Street Address</label>
                   <input
+                    title="Street Address"
                     type="text"
                     name="address"
                     value={formState.address}
@@ -144,6 +148,7 @@ export default function CheckoutPage() {
                   <div>
                     <label className="block mb-1">City</label>
                     <input
+                      title="City"
                       type="text"
                       name="city"
                       value={formState.city}
@@ -155,6 +160,7 @@ export default function CheckoutPage() {
                   <div>
                     <label className="block mb-1">State</label>
                     <input
+                      title="State"
                       type="text"
                       name="state"
                       value={formState.state}
@@ -166,6 +172,7 @@ export default function CheckoutPage() {
                   <div>
                     <label className="block mb-1">Zip Code</label>
                     <input
+                      title="Zip Code"
                       type="text"
                       name="zipCode"
                       value={formState.zipCode}
@@ -178,6 +185,7 @@ export default function CheckoutPage() {
                 <div>
                   <label className="block mb-1">Country</label>
                   <input
+                    title="Country"
                     type="text"
                     name="country"
                     value={formState.country}
@@ -210,6 +218,7 @@ export default function CheckoutPage() {
                 <div>
                   <label className="block mb-1">Cardholder Name</label>
                   <input
+                    title="Cardholder Name"
                     type="text"
                     name="cardName"
                     value={formState.cardName}

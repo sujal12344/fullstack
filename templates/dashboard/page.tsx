@@ -2,32 +2,57 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { 
-  ArrowDownIcon, 
-  ArrowUpIcon, 
-  BellIcon, 
-  ChartBarIcon, 
-  CogIcon, 
-  HomeIcon, 
-  InboxIcon, 
-  MenuIcon, 
-  UsersIcon, 
-  XIcon 
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  BellIcon,
+  ChartBarIcon,
+  CogIcon,
+  HomeIcon,
+  InboxIcon,
+  MenuIcon,
+  UsersIcon,
+  XIcon,
 } from "./icons";
 
 // Sample data
 const stats = [
-  { name: "Total Revenue", value: "$45,231.89", change: "12.5%", increasing: true },
+  {
+    name: "Total Revenue",
+    value: "$45,231.89",
+    change: "12.5%",
+    increasing: true,
+  },
   { name: "Active Users", value: "2,338", change: "5.25%", increasing: true },
   { name: "Conversion Rate", value: "3.6%", change: "0.5%", increasing: false },
   { name: "Avg. Session", value: "2m 56s", change: "10.3%", increasing: true },
 ];
 
 const recentActivity = [
-  { user: "John Doe", action: "updated the sales report", time: "2 hours ago", avatar: "/avatar1.png" },
-  { user: "Jane Smith", action: "added a new product", time: "5 hours ago", avatar: "/avatar2.png" },
-  { user: "Robert Johnson", action: "closed a support ticket", time: "Yesterday", avatar: "/avatar3.png" },
-  { user: "Lisa Wang", action: "completed onboarding", time: "2 days ago", avatar: "/avatar4.png" },
+  {
+    user: "John Doe",
+    action: "updated the sales report",
+    time: "2 hours ago",
+    avatar: "/avatar1.png",
+  },
+  {
+    user: "Jane Smith",
+    action: "added a new product",
+    time: "5 hours ago",
+    avatar: "/avatar2.png",
+  },
+  {
+    user: "Robert Johnson",
+    action: "closed a support ticket",
+    time: "Yesterday",
+    avatar: "/avatar3.png",
+  },
+  {
+    user: "Lisa Wang",
+    action: "completed onboarding",
+    time: "2 days ago",
+    avatar: "/avatar4.png",
+  },
 ];
 
 const chartData = [
@@ -46,10 +71,27 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Mobile sidebar */}
-      <div className={`fixed inset-0 z-40 flex md:hidden ${sidebarOpen ? "visible" : "invisible"}`}>
-        <div className={`fixed inset-0 bg-gray-600 bg-opacity-75 transition-opacity ${sidebarOpen ? "opacity-100 ease-out duration-300" : "opacity-0 ease-in duration-200"}`} onClick={() => setSidebarOpen(false)}></div>
-        
-        <div className={`relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-white transition transform ${sidebarOpen ? "translate-x-0 ease-out duration-300" : "-translate-x-full ease-in duration-200"}`}>
+      <div
+        className={`fixed inset-0 z-40 flex md:hidden ${
+          sidebarOpen ? "visible" : "invisible"
+        }`}
+      >
+        <div
+          className={`fixed inset-0 bg-gray-600 bg-opacity-75 transition-opacity ${
+            sidebarOpen
+              ? "opacity-100 ease-out duration-300"
+              : "opacity-0 ease-in duration-200"
+          }`}
+          onClick={() => setSidebarOpen(false)}
+        />
+
+        <div
+          className={`relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-white transition transform ${
+            sidebarOpen
+              ? "translate-x-0 ease-out duration-300"
+              : "-translate-x-full ease-in duration-200"
+          }`}
+        >
           <div className="absolute top-0 right-0 -mr-12 pt-2">
             <button
               className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
@@ -59,25 +101,41 @@ export default function Dashboard() {
               <XIcon className="h-6 w-6 text-white" />
             </button>
           </div>
-          
+
           <div className="flex-shrink-0 flex items-center px-4">
             <span className="text-xl font-bold text-gray-800">MyDashboard</span>
           </div>
           <div className="mt-5 flex-1 h-0 overflow-y-auto">
             <nav className="px-2 space-y-1">
-              <NavItem href="/" icon={<HomeIcon className="mr-3 h-6 w-6" />} current>
+              <NavItem
+                href="/"
+                icon={<HomeIcon className="mr-3 h-6 w-6" />}
+                current
+              >
                 Dashboard
               </NavItem>
-              <NavItem href="/analytics" icon={<ChartBarIcon className="mr-3 h-6 w-6" />}>
+              <NavItem
+                href="/analytics"
+                icon={<ChartBarIcon className="mr-3 h-6 w-6" />}
+              >
                 Analytics
               </NavItem>
-              <NavItem href="/customers" icon={<UsersIcon className="mr-3 h-6 w-6" />}>
+              <NavItem
+                href="/customers"
+                icon={<UsersIcon className="mr-3 h-6 w-6" />}
+              >
                 Customers
               </NavItem>
-              <NavItem href="/messages" icon={<InboxIcon className="mr-3 h-6 w-6" />}>
+              <NavItem
+                href="/messages"
+                icon={<InboxIcon className="mr-3 h-6 w-6" />}
+              >
                 Messages
               </NavItem>
-              <NavItem href="/settings" icon={<CogIcon className="mr-3 h-6 w-6" />}>
+              <NavItem
+                href="/settings"
+                icon={<CogIcon className="mr-3 h-6 w-6" />}
+              >
                 Settings
               </NavItem>
             </nav>
@@ -90,22 +148,40 @@ export default function Dashboard() {
         <div className="flex-1 flex flex-col min-h-0 bg-white border-r border-gray-200">
           <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
             <div className="flex items-center flex-shrink-0 px-4">
-              <span className="text-xl font-bold text-gray-800">MyDashboard</span>
+              <span className="text-xl font-bold text-gray-800">
+                MyDashboard
+              </span>
             </div>
             <nav className="mt-5 flex-1 px-2 space-y-1">
-              <NavItem href="/" icon={<HomeIcon className="mr-3 h-6 w-6" />} current>
+              <NavItem
+                href="/"
+                icon={<HomeIcon className="mr-3 h-6 w-6" />}
+                current
+              >
                 Dashboard
               </NavItem>
-              <NavItem href="/analytics" icon={<ChartBarIcon className="mr-3 h-6 w-6" />}>
+              <NavItem
+                href="/analytics"
+                icon={<ChartBarIcon className="mr-3 h-6 w-6" />}
+              >
                 Analytics
               </NavItem>
-              <NavItem href="/customers" icon={<UsersIcon className="mr-3 h-6 w-6" />}>
+              <NavItem
+                href="/customers"
+                icon={<UsersIcon className="mr-3 h-6 w-6" />}
+              >
                 Customers
               </NavItem>
-              <NavItem href="/messages" icon={<InboxIcon className="mr-3 h-6 w-6" />}>
+              <NavItem
+                href="/messages"
+                icon={<InboxIcon className="mr-3 h-6 w-6" />}
+              >
                 Messages
               </NavItem>
-              <NavItem href="/settings" icon={<CogIcon className="mr-3 h-6 w-6" />}>
+              <NavItem
+                href="/settings"
+                icon={<CogIcon className="mr-3 h-6 w-6" />}
+              >
                 Settings
               </NavItem>
             </nav>
@@ -125,10 +201,12 @@ export default function Dashboard() {
           </button>
           <div className="flex-1 px-4 flex justify-between">
             <div className="flex-1 flex">
-              <h1 className="self-center text-xl font-semibold text-gray-800">Dashboard</h1>
+              <h1 className="self-center text-xl font-semibold text-gray-800">
+                Dashboard
+              </h1>
             </div>
             <div className="ml-4 flex items-center md:ml-6">
-              <button 
+              <button
                 className="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 aria-label="View notifications"
               >
@@ -137,7 +215,7 @@ export default function Dashboard() {
 
               <div className="ml-3 relative">
                 <div>
-                  <button 
+                  <button
                     className="max-w-xs flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     aria-label="User profile"
                   >
@@ -231,9 +309,13 @@ function StatCard({ name, value, change, increasing }) {
             <ChartBarIcon className="h-6 w-6 text-white" />
           </div>
           <div className="ml-5 w-0 flex-1">
-            <dt className="text-sm font-medium text-gray-500 truncate">{name}</dt>
+            <dt className="text-sm font-medium text-gray-500 truncate">
+              {name}
+            </dt>
             <dd className="flex items-baseline">
-              <div className="text-2xl font-semibold text-gray-900">{value}</div>
+              <div className="text-2xl font-semibold text-gray-900">
+                {value}
+              </div>
               <div
                 className={`ml-2 flex items-baseline text-sm font-semibold ${
                   increasing ? "text-green-600" : "text-red-600"
@@ -264,9 +346,7 @@ function ActivityItem({ user, action, time }) {
           </div>
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-gray-900 truncate">
-            {user}
-          </p>
+          <p className="text-sm font-medium text-gray-900 truncate">{user}</p>
           <p className="text-sm text-gray-500 truncate">{action}</p>
         </div>
         <div>
@@ -278,23 +358,27 @@ function ActivityItem({ user, action, time }) {
 }
 
 function Chart({ data }) {
-  const maxRevenue = Math.max(...data.map(item => item.revenue));
+  const maxRevenue = Math.max(...data.map((item) => item.revenue));
   const barWidth = 100 / data.length;
-  
+
   return (
     <div className="w-full h-full flex items-end">
       {data.map((item, index) => {
         const height = (item.revenue / maxRevenue) * 100;
         return (
-          <div key={index} className="flex flex-col items-center" style={{ width: `${barWidth}%` }}>
-            <div 
-              className="w-3/4 bg-indigo-500 rounded-t" 
+          <div
+            key={index}
+            className="flex flex-col items-center"
+            style={{ width: `${barWidth}%` }}
+          >
+            <div
+              className="w-3/4 bg-indigo-500 rounded-t"
               style={{ height: `${height}%` }}
-            ></div>
+            />
             <div className="mt-2 text-xs text-gray-500">{item.month}</div>
           </div>
         );
       })}
     </div>
   );
-} 
+}
