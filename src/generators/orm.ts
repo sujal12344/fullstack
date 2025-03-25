@@ -140,12 +140,8 @@ async function setupPrisma(
     const libFolderDestPath = path.join(
       projectPath,
       globalOptions.useSrcDir
-        ? globalOptions.useAppRouter
-          ? "src/lib"
-          : "src/lib"
-        : globalOptions.useAppRouter
-        ? "lib"
-        : "lib"
+        ?  "src/lib"
+        :  "lib"
     );
 
     await fs.copy(libFolderSourcePath, libFolderDestPath);
@@ -473,7 +469,6 @@ export default mongoose.models.Example || mongoose.model('Example', ExampleSchem
     }
 
     // Create an API example to use the model
-    if (globalOptions.useAppRouter) {
       const apiSpinner = createSpinner("Creating example API route...");
       const apiDirPath = path.join(
         projectPath,
@@ -521,59 +516,7 @@ export async function POST(request: Request) {
 
       await fs.writeFile(apiDirPath, apiRouteContent);
       apiSpinner.succeed("Example API route created");
-    } else {
-      // For pages directory
-      const apiSpinner = createSpinner("Creating example API route...");
-      const apiDirPath = path.join(
-        projectPath,
-        globalOptions.useSrcDir
-          ? "src/pages/api/examples.ts"
-          : "pages/api/examples.ts"
-      );
-
-      await fs.ensureDir(path.dirname(apiDirPath));
-
-      const apiRouteContent = `import type { NextApiRequest, NextApiResponse } from 'next';
-import dbConnect from '${
-        globalOptions.useSrcDir ? "../../lib/mongoose" : "../../lib/mongoose"
-      }';
-import Example from '${
-        globalOptions.useSrcDir
-          ? "../../models/Example"
-          : "../../models/Example"
-      }';
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { method } = req;
-
-  await dbConnect();
-
-  switch (method) {
-    case 'GET':
-      try {
-        const examples = await Example.find({});
-        res.status(200).json(examples);
-      } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch examples' });
-      }
-      break;
-    case 'POST':
-      try {
-        const example = await Example.create(req.body);
-        res.status(201).json(example);
-      } catch (error) {
-        res.status(500).json({ error: 'Failed to create example' });
-      }
-      break;
-    default:
-      res.status(405).json({ error: 'Method not allowed' });
-  }
-}
-`;
-
-      await fs.writeFile(apiDirPath, apiRouteContent);
-      apiSpinner.succeed("Example API route created");
-    }
+    
 
     logger.success("Mongoose setup completed successfully");
   } catch (error) {

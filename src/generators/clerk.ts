@@ -1,7 +1,6 @@
 import { execa } from "execa";
 import fs from "fs-extra";
 import path from "path";
-import inquirer from "inquirer";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { createSpinner } from "../utils/spinner.js";
@@ -49,12 +48,8 @@ export async function setupClerk(projectPath: string): Promise<void> {
       const authFolderDestPath = path.join(
         projectPath,
         globalOptions.useSrcDir
-          ? globalOptions.useAppRouter
-            ? "src/app/(auth)"
-            : "src/pages/(auth)"
-          : globalOptions.useAppRouter
-          ? "app/(auth)"
-          : "pages/(auth)"
+          ? "src/app/(auth)"
+          : "app/(auth)"
       );
 
       await fs.copy(authFolderSourcePath, authFolderDestPath);

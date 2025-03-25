@@ -29,13 +29,7 @@ export async function setupTemplates(
     // Determine app directory based on project settings
     const appDir = path.join(
       projectPath,
-      globalOptions.useSrcDir
-        ? globalOptions.useAppRouter
-          ? "src/app"
-          : "src/pages"
-        : globalOptions.useAppRouter
-        ? "app"
-        : "pages"
+      globalOptions.useSrcDir ? "src/app" : "app"
     );
     // Copy template contents to project
     await fs.copy(templatePath, appDir);
