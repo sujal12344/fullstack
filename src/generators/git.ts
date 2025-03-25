@@ -2,10 +2,6 @@ import { execa } from "execa";
 import { createSpinner } from "../utils/spinner.js";
 import { logger } from "../utils/logger.js";
 
-/**
- * Initializes a git repository in the specified project path
- * @param {string} projectPath The path to initialize the git repository in
- */
 export async function initializeGit(projectPath: string): Promise<void> {
   const spinner = createSpinner("Initializing Git repository...");
 
