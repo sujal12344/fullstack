@@ -14,6 +14,7 @@ export const logger = {
     console.log(chalk.green.bold("\n✨ Project setup completed successfully!"));
     console.log(chalk.cyan("\nNext steps:"));
     console.log(chalk.white(`  cd ${projectName}`));
+    console.log(chalk.white("  npm install"));
     console.log(chalk.white("  npm run dev"));
   },
 };

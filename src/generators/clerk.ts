@@ -124,7 +124,7 @@ export async function setupClerk(projectPath: string): Promise<void> {
         await fs.copyFile(layoutClerkThemesTemplatePath, layoutClerkThemesPath);
 
         //delete ClerkProviderLayout file and create ClerkProviderThemeLayout file
-        await fs.unlink(clerkProviderLayoutPath);
+        await fs.remove(clerkProviderLayoutPath);
         const clerkProviderThemeLayoutTemplatePath = path.join(
           rootDir,
           "clerk",
