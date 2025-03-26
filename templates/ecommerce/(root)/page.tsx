@@ -6,7 +6,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useThemeStore, themes, ThemeName } from "./store/themeStore";
 
-// Mock data - would come from API in real app
+// Dummy data - would come from API in real app
 const featuredProducts = [
   {
     id: "1",
@@ -640,8 +640,11 @@ const HomePage = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-grow px-4 py-3 rounded-lg"
-                style={{ borderRadius: currentTheme.borderRadius }}
+                className="flex-grow px-4 py-3 rounded-lg focus:outline-none"
+                style={{
+                  borderRadius: currentTheme.borderRadius,
+                  boxShadow: `0 0 4px ${currentTheme.accentColor}`, // ✅ Valid CSS property
+                }}
               />
 
               <button

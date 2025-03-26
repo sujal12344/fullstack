@@ -228,10 +228,10 @@ export default function Footer() {
               <input
                 type="email"
                 placeholder="Your email address"
-                className="px-4 py-2 text-sm  bg-opacity-10 rounded-lg focus:outline-none focus:ring-2"
+                className="px-4 py-2 text-sm bg-opacity-10 rounded-lg focus:outline-none"
                 style={{
                   borderRadius: currentTheme.borderRadius,
-                  boxShadow: `0 0 5px ${currentTheme.accentColor}`, // ✅ Valid CSS property
+                  boxShadow: `0 0 4px ${currentTheme.accentColor}`, // ✅ Valid CSS property
                 }}
               />
               <button
