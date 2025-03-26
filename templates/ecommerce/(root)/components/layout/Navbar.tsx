@@ -20,7 +20,16 @@ export default function Navbar() {
   const themeMenuRef = useRef<HTMLDivElement>(null);
   const themeTriggerRef = useRef<HTMLButtonElement>(null);
 
-  const themeOptions: ThemeName[] = ["forest", "retro", "ocean", "blossom"];
+  const themeOptions: ThemeName[] = [
+    "forest",
+    "retro",
+    "ocean",
+    "blossom",
+    "midnight",
+    "sunshine",
+    "minimal",
+    "cosmic",
+  ];
 
   const navLinks = [
     { name: "Home", href: "/" },
