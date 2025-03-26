@@ -1,13 +1,13 @@
 // app/(root)/products/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useThemeStore } from "../store/themeStore";
 import ProductCard from "../components/products/ProductCard";
 import { Product } from "../types/product";
 
-// Mock data
+// Dummy data
 const products: Product[] = [
   {
     id: "1",
@@ -248,6 +248,31 @@ export default function ProductsPage() {
   const { currentTheme } = useThemeStore();
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Fetch products from API
+  // const [products, setProducts] = useState<Product[]>([]);
+  // useEffect(() => {
+  //   const fetchProducts = async () => {
+  //     try {
+  //       const response = await fetch("https://fakestoreapi.com/products");
+  //       console.log({ response });
+
+  //       if (!response.ok) {
+  //         throw new Error(`HTTP error! Status: ${response.status}`);
+  //       }
+
+  //       const data = await response.json();
+  //       console.log({ data });
+  //       console.log(data[0]);
+  //       setProducts(data);
+  //     } catch (error) {
+  //       console.error("Error fetching products:", error);
+  //       // Consider setting an error state here to show in UI
+  //     }
+  //   };
+
+  //   fetchProducts();
+  // }, []);
 
   // Filter products based on category and search query
   const filteredProducts = products.filter(
