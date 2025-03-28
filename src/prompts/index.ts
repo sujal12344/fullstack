@@ -77,10 +77,8 @@ export async function promptUser(): Promise<GlobalOptions> {
       name: "templates",
       message: "Select templates to include:",
       choices: [
-        { title: "E-commerce Store", value: "ecommerce" },
-        { title: "Self Blog Application", value: "blog" },
-        { title: "Portfolio", value: "portfolio" },
-        { title: "Landing Page", value: "landingPage" },
+        { title: "E commerce Store", value: "ecommerce" },
+        { title: "Social Media App", value: "socialMedia" },
       ],
       initial: 0,
       hint: "Space to select, Return to submit",

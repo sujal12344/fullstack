@@ -8,5 +8,5 @@ export interface GlobalOptions {
   installDeps: boolean;
   useSrcDir: boolean;
   useTemplates: boolean;
-  templates?: "ecommerce" | "blog" | "portfolio" | "landingPage";
+  templates?: "ecommerce" | "socialMedia";
 }
